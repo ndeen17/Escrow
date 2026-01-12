@@ -202,10 +202,10 @@ const CreateContract = () => {
                 )}
               </div>
 
-              {/* Other Party's Email */}
+              {/* Contributor's Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Other Party's Email *
+                  Contributor's Email *
                 </label>
                 <input
                   type="email"
