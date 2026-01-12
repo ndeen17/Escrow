@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaLock, FaInfoCircle, FaCheck } from 'react-icons/fa';
-import { SiTether, SiCircle, SiPolygon } from 'react-icons/si';
+import { FaLock, FaCheck } from 'react-icons/fa';
 
 const CreateContract = () => {
   const navigate = useNavigate();
@@ -11,7 +10,6 @@ const CreateContract = () => {
   const [formData, setFormData] = useState({
     contractName: '',
     otherPartyEmail: '',
-    escrowType: 'blockchain',
     category: '',
     subcategory: '',
     description: '',
@@ -120,8 +118,16 @@ const CreateContract = () => {
       {/* Header with Progress Tracker */}
       <header className="bg-white border-b border-gray-200 px-8 py-6">
         <div className="max-w-4xl mx-auto">
+          {/* Logo */}
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-bold">
+              <span className="text-gray-900">Es</span>
+              <span className="text-escon-green">con</span>
+            </h1>
+          </div>
+
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Create New Contract</h1>
+            <h2 className="text-2xl font-bold text-gray-900">Create New Contract</h2>
             <button
               onClick={() => navigate('/dashboard')}
               className="text-gray-600 hover:text-gray-900 text-sm"
@@ -213,69 +219,6 @@ const CreateContract = () => {
                 {errors.otherPartyEmail && (
                   <p className="mt-1 text-sm text-red-600">{errors.otherPartyEmail}</p>
                 )}
-              </div>
-
-              {/* Escrow Type */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Escrow Type *
-                </label>
-                <div
-                  onClick={() => handleChange('escrowType', 'blockchain')}
-                  className={`border-2 rounded-xl p-6 cursor-pointer transition-all ${
-                    formData.escrowType === 'blockchain'
-                      ? 'border-escon-green bg-escon-green/5'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Blockchain</h3>
-                      <p className="text-sm text-gray-600 mb-4">Secure, transparent payments on the blockchain</p>
-                      
-                      {/* Token Icons */}
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-gray-500 font-medium">Supported:</span>
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded-lg">
-                            <SiTether className="w-4 h-4 text-green-600" />
-                            <span className="text-xs font-medium">USDT</span>
-                          </div>
-                          <div className="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded-lg">
-                            <SiCircle className="w-4 h-4 text-blue-600" />
-                            <span className="text-xs font-medium">USDC</span>
-                          </div>
-                          <div className="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded-lg">
-                            <span className="text-xs font-medium">DAI</span>
-                          </div>
-                          <div className="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded-lg">
-                            <SiPolygon className="w-4 h-4 text-purple-600" />
-                            <span className="text-xs font-medium">Polygon</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                      formData.escrowType === 'blockchain'
-                        ? 'border-escon-green'
-                        : 'border-gray-300'
-                    }`}>
-                      {formData.escrowType === 'blockchain' && (
-                        <div className="w-3.5 h-3.5 rounded-full bg-escon-green"></div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Info Box */}
-                <div className="mt-4 flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <FaInfoCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-blue-900">
-                      <span className="font-semibold">No crypto?</span> You can also use bank accounts or credit/debit cards for payments.
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
           )}
