@@ -139,15 +139,6 @@ const CreateContract = () => {
             <h2 className="text-2xl font-bold text-gray-900">Create New Contract</h2>
           </div>
 
-          <div className="flex items-center justify-end mb-6">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="text-gray-600 hover:text-gray-900 text-sm"
-            >
-              Cancel
-            </button>
-          </div>
-
           {/* Progress Tracker */}
           <div className="flex items-center justify-between relative">
             {steps.map((step, index) => (
