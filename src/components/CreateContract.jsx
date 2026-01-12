@@ -118,16 +118,19 @@ const CreateContract = () => {
       {/* Header with Progress Tracker */}
       <header className="bg-white border-b border-gray-200 px-8 py-6">
         <div className="max-w-4xl mx-auto">
-          {/* Logo */}
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold">
-              <span className="text-gray-900">Es</span>
-              <span className="text-escon-green">con</span>
-            </h1>
-          </div>
-
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Create New Contract</h2>
+            
+            {/* Logo */}
+            <div>
+              <h1 className="text-3xl font-bold">
+                <span className="text-gray-900">Es</span>
+                <span className="text-escon-green">con</span>
+              </h1>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end mb-6">
             <button
               onClick={() => navigate('/dashboard')}
               className="text-gray-600 hover:text-gray-900 text-sm"
