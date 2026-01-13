@@ -20,6 +20,14 @@ const AgencyRegistration = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Agency registration:', formData);
+    // Save user data to localStorage
+    localStorage.setItem('user', JSON.stringify({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      companyName: formData.companyName,
+      role: 'Agency',
+      country: formData.country
+    }));
     // Navigate to dashboard
     navigate('/dashboard');
   };

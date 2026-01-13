@@ -9,6 +9,23 @@ const Dashboard = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Get user data from localStorage
+  const getUserData = () => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      return JSON.parse(userData);
+    }
+    return {
+      firstName: 'Guest',
+      lastName: 'User',
+      role: 'User'
+    };
+  };
+
+  const user = getUserData();
+  const initials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+  const fullName = `${user.firstName} ${user.lastName.charAt(0)}.`;
+
   const navItems = [
     { id: 'pending', label: 'Pending', icon: AiOutlineClockCircle },
     { id: 'active', label: 'Active', icon: AiOutlineCheckCircle },
@@ -159,11 +176,11 @@ const Dashboard = () => {
               {/* User Profile */}
               <div className="flex items-center gap-2 md:gap-3">
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-900 text-white rounded-full flex items-center justify-center font-semibold text-sm">
-                  SJ
+                  {initials}
                 </div>
                 <div className="text-sm hidden sm:block">
-                  <div className="font-semibold text-gray-900">Samuel J.</div>
-                  <div className="text-gray-500">Freelancer</div>
+                  <div className="font-semibold text-gray-900">{fullName}</div>
+                  <div className="text-gray-500">{user.role}</div>
                 </div>
               </div>
             </div>

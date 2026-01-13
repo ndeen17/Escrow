@@ -20,6 +20,13 @@ const ClientRegistration = () => {
     e.preventDefault();
     // Handle registration logic here
     console.log('Client registration:', formData);
+    // Save user data to localStorage
+    localStorage.setItem('user', JSON.stringify({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      role: 'Client',
+      country: formData.country
+    }));
     // Navigate to dashboard
     navigate('/dashboard');
   };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaLock, FaCheck, FaArrowLeft } from 'react-icons/fa';
+import CategoryDropdown from './CategoryDropdown';
 
 const CreateContract = () => {
   const navigate = useNavigate();
@@ -28,14 +29,6 @@ const CreateContract = () => {
     { id: 2, label: 'Description' },
     { id: 3, label: 'Budget & Terms' }
   ];
-
-  const categories = {
-    'IT & Networking': ['Database Administration', 'DevOps', 'Network Security', 'Software Development', 'System Administration'],
-    'Design': ['Graphic Design', 'UI/UX Design', 'Web Design', 'Brand Identity', 'Illustration'],
-    'Legal': ['Contract Law', 'Corporate Law', 'Intellectual Property', 'Compliance', 'Litigation'],
-    'Marketing': ['Digital Marketing', 'Content Marketing', 'SEO', 'Social Media', 'Brand Strategy'],
-    'Writing': ['Content Writing', 'Copywriting', 'Technical Writing', 'Blog Writing', 'Editing']
-  };
 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
@@ -235,44 +228,15 @@ const CreateContract = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Contract Category *
                 </label>
-                <select
+                <CategoryDropdown
                   value={formData.category}
-                  onChange={(e) => {
-                    handleChange('category', e.target.value);
-                    handleChange('subcategory', '');
-                  }}
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-escon-green ${
-                    errors.category ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                >
-                  <option value="">Select a category</option>
-                  {Object.keys(categories).map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
+                  onChange={(value) => handleChange('category', value)}
+                  error={errors.category}
+                />
                 {errors.category && (
                   <p className="mt-1 text-sm text-red-600">{errors.category}</p>
                 )}
               </div>
-
-              {/* Subcategory */}
-              {formData.category && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Specific Role
-                  </label>
-                  <select
-                    value={formData.subcategory}
-                    onChange={(e) => handleChange('subcategory', e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-escon-green"
-                  >
-                    <option value="">Select a specific role (optional)</option>
-                    {categories[formData.category].map((subcat) => (
-                      <option key={subcat} value={subcat}>{subcat}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
 
               {/* Description */}
               <div>
