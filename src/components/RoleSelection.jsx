@@ -12,29 +12,27 @@ const RoleSelection = () => {
       id: 'client',
       icon: ClientIcon,
       title: "I'm a client",
-      description: "I want to manage contracts with service providers.",
-      route: '/register/client'
+      description: "I want to manage contracts with service providers."
     },
     {
       id: 'agency',
       icon: AgencyIcon,
       title: "I'm an agency",
-      description: "My team works with clients.",
-      route: '/register/agency'
+      description: "My team works with clients."
     },
     {
       id: 'freelancer',
       icon: FreelancerIcon,
       title: "I'm a freelancer",
-      description: "I work with clients.",
-      route: '/register/freelancer'
+      description: "I work with clients."
     }
   ];
 
   const handleContinue = () => {
     if (selectedRole) {
-      const role = roles.find(r => r.id === selectedRole);
-      navigate(role.route, { state: { role: selectedRole } });
+      // Store selected role and navigate to contract creation
+      localStorage.setItem('selectedRole', selectedRole);
+      navigate('/create-contract', { state: { role: selectedRole } });
     }
   };
 
@@ -90,7 +88,7 @@ const RoleSelection = () => {
         {/* Back to Sign In Link */}
         <div className="text-center mt-6">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/sign-in')}
             className="text-gray-600 hover:text-gray-900 text-sm font-medium"
           >
             Already have an account? <span className="text-escon-green">Sign in</span>

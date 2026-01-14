@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const ClientRegistration = () => {
   const navigate = useNavigate();
+  const { loginWithRedirect } = useAuth0();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -16,19 +18,19 @@ const ClientRegistration = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle registration logic here
-    console.log('Client registration:', formData);
-    // Save user data to localStorage
-    localStorage.setItem('user', JSON.stringify({
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      role: 'Client',
-      country: formData.country
+    
+    // Store form data temporarily
+    localStorage.setItem('pendingRegistration', JSON.stringify({
+      ...formData,
+      role: 'Client'
     }));
-    // Navigate to dashboard
-    navigate('/dashboard');
+    
+    // Redirect to Auth0 for authentication
+    loginWithRedirect({
+      appState: { returnTo: '/dashboard' }
+    });
   };
 
   return (

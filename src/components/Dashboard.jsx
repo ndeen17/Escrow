@@ -1,28 +1,158 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import { FaBell, FaPlus, FaArchive, FaBars, FaTimes } from 'react-icons/fa';
 import { AiOutlineClockCircle, AiOutlineCheckCircle, AiOutlineInbox, AiOutlineWallet } from 'react-icons/ai';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { user: auth0User, isAuthenticated, isLoading, logout, getAccessTokenSilently } = useAuth0();
   const [activeNav, setActiveNav] = useState('archived');
   const [activeFilter, setActiveFilter] = useState('all');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
 
-  // Get user data from localStorage
-  const getUserData = () => {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      return JSON.parse(userData);
-    }
-    return {
-      firstName: 'Guest',
-      lastName: 'User',
-      role: 'User'
+  useEffect(() => {
+    const completeRegistrationAndContract = async () => {
+      if (isAuthenticated && auth0User) {
+        try {
+          const token = await getAccessTokenSilently();
+          
+          // Check for pending submission (new user flow with contract)
+          const pendingSubmission = localStorage.getItem('pendingSubmission');
+          
+          if (pendingSubmission) {
+            const { registrationData, contractData, timestamp } = JSON.parse(pendingSubmission);
+            
+            // Check if submission is not expired (48 hours)
+            const age = Date.now() - timestamp;
+            if (age > 48 * 60 * 60 * 1000) {
+              localStorage.removeItem('pendingSubmission');
+              return;
+            }
+            
+            if (registrationData) {
+              // New user: register with initial contract
+              const response = await fetch('http://localhost:5000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                  auth0Id: auth0User.sub,
+                  email: auth0User.email,
+                  ...registrationData,
+                  initialContract: contractData
+                })
+              });
+
+              if (response.ok) {
+                const data = await response.json();
+                setUserProfile(data.data.user);
+                localStorage.removeItem('pendingSubmission');
+                localStorage.removeItem('contractDraft');
+                localStorage.setItem('user', JSON.stringify(data.data.user));
+                
+                // Show success message
+                alert('Welcome! Your account and contract have been created.');
+              }
+            } else if (contractData) {
+              // Existing user: just create contract
+              const response = await fetch('http://localhost:5000/api/contracts', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                  contractName: contractData.contractName,
+                  contributorEmail: contractData.otherPartyEmail,
+                  category: contractData.category,
+                  description: contractData.description,
+                  contractType: contractData.contractType,
+                  budget: contractData.contractType === 'fixed' ? parseFloat(contractData.budget) : undefined,
+                  hourlyRate: contractData.contractType === 'hourly' ? parseFloat(contractData.hourlyRate) : undefined,
+                  weeklyLimit: contractData.contractType === 'hourly' && !contractData.noLimit ? parseFloat(contractData.weeklyLimit) : undefined,
+                  currency: contractData.currency,
+                  splitMilestones: contractData.splitMilestones,
+                  milestones: contractData.splitMilestones ? contractData.milestones : undefined,
+                  dueDate: contractData.dueDate || undefined,
+                  status: 'draft'
+                })
+              });
+
+              if (response.ok) {
+                localStorage.removeItem('pendingSubmission');
+                localStorage.removeItem('contractDraft');
+                alert('Contract created successfully!');
+              }
+            }
+          } else {
+            // No pending submission, check for old pendingRegistration format
+            const pendingReg = localStorage.getItem('pendingRegistration');
+            if (pendingReg) {
+              const registrationData = JSON.parse(pendingReg);
+              
+              const response = await fetch('http://localhost:5000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                  auth0Id: auth0User.sub,
+                  email: auth0User.email,
+                  ...registrationData
+                })
+              });
+
+              if (response.ok) {
+                const data = await response.json();
+                setUserProfile(data.data.user);
+                localStorage.removeItem('pendingRegistration');
+                localStorage.setItem('user', JSON.stringify(data.data.user));
+              }
+            } else {
+              // Try to get existing user profile
+              const existingUser = localStorage.getItem('user');
+              if (existingUser) {
+                setUserProfile(JSON.parse(existingUser));
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Registration/Contract error:', error);
+          alert('Error processing your request. Please try again.');
+        }
+      }
     };
+
+    completeRegistrationAndContract();
+  }, [isAuthenticated, auth0User, getAccessTokenSilently]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-escon-green mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    navigate('/sign-in');
+    return null;
+  }
+
+  const user = userProfile || {
+    firstName: auth0User?.given_name || 'Guest',
+    lastName: auth0User?.family_name || 'User',
+    role: 'User'
   };
 
-  const user = getUserData();
   const initials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
   const fullName = `${user.firstName} ${user.lastName.charAt(0)}.`;
 

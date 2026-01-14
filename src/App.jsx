@@ -14,11 +14,12 @@ function App() {
         <Routes>
           <Route path="/" element={<RoleSelection />} />
           <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/create-contract" element={<CreateContract />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Legacy registration routes - kept for backward compatibility */}
           <Route path="/register/client" element={<ClientRegistration />} />
           <Route path="/register/agency" element={<AgencyRegistration />} />
           <Route path="/register/freelancer" element={<FreelancerRegistration />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/create-contract" element={<CreateContract />} />
         </Routes>
       </div>
     </Router>

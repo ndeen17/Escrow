@@ -1,14 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const { loginWithRedirect } = useAuth0();
 
   const handleSignIn = () => {
-    // Grant access immediately - no authentication required
-    console.log('User signed in');
-    // Navigate to dashboard
-    navigate('/dashboard');
+    loginWithRedirect();
   };
 
   return (

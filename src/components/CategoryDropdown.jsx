@@ -163,9 +163,9 @@ const CategoryDropdown = ({ value, onChange, error }) => {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-50 mt-2 w-full md:w-auto bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+        <div className="absolute z-50 mt-2 w-full bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
           {/* Search Bar */}
-          <div className="p-3 border-b border-gray-200">
+          <div className="p-4 border-b border-gray-200 bg-gray-50">
             <div className="relative">
               <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
@@ -173,7 +173,7 @@ const CategoryDropdown = ({ value, onChange, error }) => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search categories..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-escon-green text-sm"
+                className="w-full pl-10 pr-4 py-2.5 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-escon-green focus:ring-0 text-sm bg-white transition-colors"
               />
             </div>
           </div>
@@ -203,9 +203,9 @@ const CategoryDropdown = ({ value, onChange, error }) => {
             </div>
           ) : (
             /* Desktop Two-Column View */
-            <div className={`flex ${mobileView ? 'flex-col' : ''}`}>
+            <div className="flex">
               {/* Left Pane - Main Categories */}
-              <div className={`${mobileView ? 'w-full' : 'w-64'} border-r border-gray-200 max-h-80 overflow-y-auto`}>
+              <div className="w-1/2 border-r border-gray-200 max-h-80 overflow-y-auto">
                 {Object.keys(filteredCategories).map((mainCat) => (
                   <button
                     key={mainCat}
@@ -230,7 +230,7 @@ const CategoryDropdown = ({ value, onChange, error }) => {
 
               {/* Right Pane - Sub-categories (Desktop Only) */}
               {!mobileView && displayCategory && filteredCategories[displayCategory] && (
-                <div className="w-64 max-h-80 overflow-y-auto bg-gray-50">
+                <div className="w-1/2 max-h-80 overflow-y-auto bg-gray-50">
                   {filteredCategories[displayCategory].map((subCat) => (
                     <button
                       key={subCat}
